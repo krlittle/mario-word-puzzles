@@ -82,16 +82,87 @@ div.guessbox {
 <script>
 
 const answers = [
+    /* characters */
     "MARIO",
     "LUIGI",
-    "BOWSER",
-    "KAMEK",
-    "YOSHI",
+    "PEACH",
     "DAISY",
-    "PRINCESS PEACH",
+    "TOAD",
+    "YOSHI",
     "ROSALIA",
+    "LUMA",
+    "TOADETTE",
     "CAPTAIN TOAD",
-    "LUMA"
+    "POOCHY",
+    "NABBIT",
+    "BOWSER",
+    "BOWSER JR",
+    "WARIO",
+    "WALUIGI",
+    "KAMEK",
+    "KING BOO",
+    "PETEY PIRANHA",
+    "BULLET BILL",
+    "CHAIN CHOMP",
+    "CHEEP CHEEP",
+    "GOOMBA",
+    "HAMMER BRO",
+    "KOOPA TROOPA",
+    "LAKITU",
+    "MONTY MOLE",
+    "PIRANHA PLANT",
+    "SHY GUY",
+    "SPINY",
+    "THWOMP",
+    "WIGGLER",
+    /* locations */
+    "AIRSHIP",
+    "CAP KINGDOM",
+    "CASCADE KINGDOM",
+    "DELFINO PLAZA",
+    "FORTRESS",
+    "GUSTY GARDEN GALAXY",
+    "HONEYHIVE GALAXY",
+    "METRO KINGDOM",
+    "MUSHROOM KINGDOM",
+    "RAINBOW ROAD",
+    "STAR ROAD",
+    "TOAD HOUSE",
+    "TOAD TOWN",
+    "WARP ZONE",
+    /* items */
+    "SUPER MUSHROOM",
+    "MEGA MUSHROOM",
+    "POISON MUSHROOM",
+    "MINI MUSHROOM",
+    "BEE MUSHROOM",
+    "BOO MUSHROOM",
+    "SPRING MUSHROOM",
+    "PROPELLER MUSHROOM",
+    "ROCK MUSHROOM",
+    "FIRE FLOWER",
+    "CLOUD FLOWER",
+    "GOLD FLOWER",
+    "BOOMERANG FLOWER",
+    "STARMAN",
+    "TANOOKI SUIT",
+    "FROG SUIT",
+    "PENGUIN SUIT",
+    "SUPER LEAF",
+    "INVINCIBILITY LEAF",
+    "STATUE LEAF",
+    "SUPER ACORN",
+    "SUPER BELL",
+    "LUCKY BELL",
+    "DOUBLE CHERRY",
+    "COIN",
+    "RED COIN",
+    "BLUE COIN",
+    "POWER MOON",
+    "POW BLOCK",
+    "GREEN SHELL",
+    "RED SHELL",
+    "BLUE SHELL"
 ];
 
 var encodingCypher = new Map([
@@ -162,7 +233,7 @@ for(const letter of answer) {
     if(letter == " ") { 
         encodedAnswer += "<div></div>" 
     } else {
-        encodedAnswer += "<div id=\"" + letter + "\" class=\"guessbox\">" + encodingCypher.get(letter) + "</div>";
+        encodedAnswer += "<div name=\"" + letter + "\" class=\"guessbox\">" + encodingCypher.get(letter) + "</div>";
         i = i++;
     }
 };
@@ -182,9 +253,9 @@ document.onkeydown = function(e) {
     const keyCode = e.keyCode;
     if (keyCode > 64 && keyCode < 91) {
         const guess = decodingCypher.get(keyCode);
-        if (document.getElementById(guess)) {
-            document.getElementById(guess).innerHTML = guess;
-        }
+        document.getElementsByName(guess).forEach(function(each) {
+            each.innerHTML = guess;
+        })
     }
 }
 
