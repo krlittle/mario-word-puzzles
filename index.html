@@ -231,7 +231,7 @@ let i = 0;
 
 for(const letter of answer) {
     if(letter == " ") { 
-        encodedAnswer += "<div></div>" 
+        encodedAnswer += "<br/><br/><br/><br/>" 
     } else {
         encodedAnswer += "<div name=\"" + letter + "\" class=\"guessbox\">" + encodingCypher.get(letter) + "</div>";
         i = i++;
