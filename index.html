@@ -23,14 +23,32 @@ body {
 }
 
 div.guessbox {
-    float: left;
-    height: 5%;
-    width: 5%;
-    padding: 1% 1%;
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+    margin: 3px;
+    line-height: 50px;
+    z-index: 10;
+}
+
+.word-break {
+    flex-basis: 100%;
+    height: 20px;
 }
 
 .guessbox {
-    border: 1px red solid; 
+    background: linear-gradient(135deg, #f5bc42 0%, #e6a222 50%, #c98b1a 100%);
+    border: 4px solid #8b5a2b;
+    border-radius: 4px;
+    box-shadow:
+        inset 2px 2px 0 #ffe082,
+        inset -2px -2px 0 #a56a1b,
+        3px 3px 0 #5d3a1a;
+    color: #5d3a1a;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #ffe082;
 }
 
 .split-left {
@@ -39,11 +57,256 @@ div.guessbox {
   position: fixed;
   z-index: 1;
   top: 0;
-  overflow-x: hidden;
-  padding-top: 20px;
+  overflow: hidden;
   left: 0;
-  background-color: white;
-  color:red;
+  background-color: #5c94fc;
+  color: red;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Ground/brick floor - authentic SMB 1-1 brick pattern */
+.split-left::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23c84c0c'/%3E%3C!-- Top brick - highlight on top and left edges --%3E%3Crect x='0' y='0' width='30' height='2' fill='%23e09050'/%3E%3Crect x='0' y='2' width='2' height='12' fill='%23e09050'/%3E%3C!-- Top brick - shadow on right edge --%3E%3Crect x='30' y='0' width='2' height='14' fill='%23000'/%3E%3C!-- Top brick - shadow on bottom edge --%3E%3Crect x='0' y='14' width='32' height='2' fill='%23000'/%3E%3C!-- Bottom brick left half - highlight --%3E%3Crect x='0' y='16' width='14' height='2' fill='%23e09050'/%3E%3Crect x='0' y='18' width='2' height='12' fill='%23e09050'/%3E%3C!-- Bottom brick left half - shadow --%3E%3Crect x='14' y='16' width='2' height='16' fill='%23000'/%3E%3Crect x='0' y='30' width='16' height='2' fill='%23000'/%3E%3C!-- Bottom brick right half - highlight --%3E%3Crect x='16' y='16' width='14' height='2' fill='%23e09050'/%3E%3Crect x='16' y='18' width='2' height='12' fill='%23e09050'/%3E%3C!-- Bottom brick right half - shadow --%3E%3Crect x='30' y='16' width='2' height='14' fill='%23000'/%3E%3Crect x='16' y='30' width='16' height='2' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 64px 64px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  z-index: 0;
+}
+
+/* Bush - same shape as cloud but light green */
+.bush {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+}
+
+/* Single-bump bush (small) */
+.bush-small {
+  box-shadow:
+    /* Black outline - top */
+    12px 0 0 #000, 16px 0 0 #000, 20px 0 0 #000,
+    8px 4px 0 #000, 24px 4px 0 #000,
+    4px 8px 0 #000, 28px 8px 0 #000,
+    4px 12px 0 #000, 28px 12px 0 #000,
+    0px 16px 0 #000, 32px 16px 0 #000,
+    0px 20px 0 #000, 32px 20px 0 #000,
+    /* Black outline - bottom */
+    4px 24px 0 #000, 8px 24px 0 #000, 12px 24px 0 #000, 16px 24px 0 #000, 20px 24px 0 #000, 24px 24px 0 #000, 28px 24px 0 #000,
+    /* Green fill */
+    12px 4px 0 #80d010, 16px 4px 0 #80d010, 20px 4px 0 #80d010,
+    8px 8px 0 #80d010, 12px 8px 0 #80d010, 16px 8px 0 #80d010, 20px 8px 0 #80d010, 24px 8px 0 #80d010,
+    8px 12px 0 #80d010, 12px 12px 0 #80d010, 16px 12px 0 #80d010, 20px 12px 0 #80d010, 24px 12px 0 #80d010,
+    4px 16px 0 #80d010, 8px 16px 0 #80d010, 12px 16px 0 #80d010, 16px 16px 0 #80d010, 20px 16px 0 #80d010, 24px 16px 0 #80d010, 28px 16px 0 #80d010,
+    4px 20px 0 #80d010, 8px 20px 0 #80d010, 28px 20px 0 #80d010,
+    /* Eyes */
+    12px 12px 0 #000, 20px 12px 0 #000,
+    /* Dark green shading */
+    12px 20px 0 #00a800, 16px 20px 0 #00a800, 20px 20px 0 #00a800, 24px 20px 0 #00a800;
+}
+
+/* Triple-bump bush (large) */
+.bush-large {
+  box-shadow:
+    /* Black outline - top bumps */
+    12px 0 0 #000, 16px 0 0 #000, 20px 0 0 #000,
+    36px 0 0 #000, 40px 0 0 #000, 44px 0 0 #000,
+    60px 0 0 #000, 64px 0 0 #000, 68px 0 0 #000,
+    8px 4px 0 #000, 24px 4px 0 #000,
+    32px 4px 0 #000, 48px 4px 0 #000,
+    56px 4px 0 #000, 72px 4px 0 #000,
+    4px 8px 0 #000, 76px 8px 0 #000,
+    4px 12px 0 #000, 76px 12px 0 #000,
+    0px 16px 0 #000, 80px 16px 0 #000,
+    0px 20px 0 #000, 80px 20px 0 #000,
+    /* Black outline - bottom */
+    4px 24px 0 #000, 8px 24px 0 #000, 12px 24px 0 #000, 16px 24px 0 #000, 20px 24px 0 #000, 24px 24px 0 #000, 28px 24px 0 #000,
+    32px 24px 0 #000, 36px 24px 0 #000, 40px 24px 0 #000, 44px 24px 0 #000, 48px 24px 0 #000, 52px 24px 0 #000, 56px 24px 0 #000,
+    60px 24px 0 #000, 64px 24px 0 #000, 68px 24px 0 #000, 72px 24px 0 #000, 76px 24px 0 #000,
+    /* Green fill - top row */
+    12px 4px 0 #80d010, 16px 4px 0 #80d010, 20px 4px 0 #80d010,
+    36px 4px 0 #80d010, 40px 4px 0 #80d010, 44px 4px 0 #80d010,
+    60px 4px 0 #80d010, 64px 4px 0 #80d010, 68px 4px 0 #80d010,
+    /* Green fill - body */
+    8px 8px 0 #80d010, 12px 8px 0 #80d010, 16px 8px 0 #80d010, 20px 8px 0 #80d010, 24px 8px 0 #80d010, 28px 8px 0 #80d010,
+    32px 8px 0 #80d010, 36px 8px 0 #80d010, 40px 8px 0 #80d010, 44px 8px 0 #80d010, 48px 8px 0 #80d010, 52px 8px 0 #80d010,
+    56px 8px 0 #80d010, 60px 8px 0 #80d010, 64px 8px 0 #80d010, 68px 8px 0 #80d010, 72px 8px 0 #80d010,
+    8px 12px 0 #80d010, 12px 12px 0 #80d010, 16px 12px 0 #80d010, 20px 12px 0 #80d010, 24px 12px 0 #80d010, 28px 12px 0 #80d010,
+    32px 12px 0 #80d010, 36px 12px 0 #80d010, 40px 12px 0 #80d010, 44px 12px 0 #80d010, 48px 12px 0 #80d010, 52px 12px 0 #80d010,
+    56px 12px 0 #80d010, 60px 12px 0 #80d010, 64px 12px 0 #80d010, 68px 12px 0 #80d010, 72px 12px 0 #80d010,
+    4px 16px 0 #80d010, 8px 16px 0 #80d010, 12px 16px 0 #80d010, 16px 16px 0 #80d010, 20px 16px 0 #80d010, 24px 16px 0 #80d010, 28px 16px 0 #80d010,
+    32px 16px 0 #80d010, 36px 16px 0 #80d010, 40px 16px 0 #80d010, 44px 16px 0 #80d010, 48px 16px 0 #80d010, 52px 16px 0 #80d010,
+    56px 16px 0 #80d010, 60px 16px 0 #80d010, 64px 16px 0 #80d010, 68px 16px 0 #80d010, 72px 16px 0 #80d010, 76px 16px 0 #80d010,
+    4px 20px 0 #80d010, 8px 20px 0 #80d010, 72px 20px 0 #80d010, 76px 20px 0 #80d010,
+    /* Eyes */
+    16px 12px 0 #000, 40px 12px 0 #000, 64px 12px 0 #000,
+    /* Dark green shading */
+    12px 20px 0 #00a800, 16px 20px 0 #00a800, 20px 20px 0 #00a800, 24px 20px 0 #00a800, 28px 20px 0 #00a800,
+    32px 20px 0 #00a800, 36px 20px 0 #00a800, 40px 20px 0 #00a800, 44px 20px 0 #00a800, 48px 20px 0 #00a800,
+    52px 20px 0 #00a800, 56px 20px 0 #00a800, 60px 20px 0 #00a800, 64px 20px 0 #00a800, 68px 20px 0 #00a800;
+}
+
+/* Pixelated hill - dark green mound using box-shadow */
+.hill {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  transform: scale(1.5);
+  transform-origin: bottom left;
+}
+
+/* Small hill */
+.hill-small {
+  box-shadow:
+    /* Black outline - top curve */
+    20px 0 0 #000, 24px 0 0 #000, 28px 0 0 #000, 32px 0 0 #000,
+    16px 4px 0 #000, 36px 4px 0 #000,
+    12px 8px 0 #000, 40px 8px 0 #000,
+    8px 12px 0 #000, 44px 12px 0 #000,
+    4px 16px 0 #000, 48px 16px 0 #000,
+    0px 20px 0 #000, 52px 20px 0 #000,
+    0px 24px 0 #000, 52px 24px 0 #000,
+    0px 28px 0 #000, 52px 28px 0 #000,
+    /* Green fill */
+    20px 4px 0 #00a800, 24px 4px 0 #00a800, 28px 4px 0 #00a800, 32px 4px 0 #00a800,
+    16px 8px 0 #00a800, 20px 8px 0 #00a800, 24px 8px 0 #00a800, 28px 8px 0 #00a800, 32px 8px 0 #00a800, 36px 8px 0 #00a800,
+    12px 12px 0 #00a800, 16px 12px 0 #00a800, 20px 12px 0 #00a800, 24px 12px 0 #00a800, 28px 12px 0 #00a800, 32px 12px 0 #00a800, 36px 12px 0 #00a800, 40px 12px 0 #00a800,
+    8px 16px 0 #00a800, 12px 16px 0 #00a800, 16px 16px 0 #00a800, 20px 16px 0 #00a800, 24px 16px 0 #00a800, 28px 16px 0 #00a800, 32px 16px 0 #00a800, 36px 16px 0 #00a800, 40px 16px 0 #00a800, 44px 16px 0 #00a800,
+    4px 20px 0 #00a800, 8px 20px 0 #00a800, 12px 20px 0 #00a800, 16px 20px 0 #00a800, 20px 20px 0 #00a800, 24px 20px 0 #00a800, 28px 20px 0 #00a800, 32px 20px 0 #00a800, 36px 20px 0 #00a800, 40px 20px 0 #00a800, 44px 20px 0 #00a800, 48px 20px 0 #00a800,
+    4px 24px 0 #00a800, 8px 24px 0 #00a800, 12px 24px 0 #00a800, 16px 24px 0 #00a800, 20px 24px 0 #00a800, 24px 24px 0 #00a800, 28px 24px 0 #00a800, 32px 24px 0 #00a800, 36px 24px 0 #00a800, 40px 24px 0 #00a800, 44px 24px 0 #00a800, 48px 24px 0 #00a800,
+    4px 28px 0 #00a800, 8px 28px 0 #00a800, 12px 28px 0 #00a800, 16px 28px 0 #00a800, 20px 28px 0 #00a800, 24px 28px 0 #00a800, 28px 28px 0 #00a800, 32px 28px 0 #00a800, 36px 28px 0 #00a800, 40px 28px 0 #00a800, 44px 28px 0 #00a800, 48px 28px 0 #00a800,
+    /* Eyes - left eye */
+    16px 12px 0 #000, 20px 12px 0 #000,
+    16px 16px 0 #000, 20px 16px 0 #000,
+    /* Eyes - right eye */
+    32px 12px 0 #000, 36px 12px 0 #000,
+    32px 16px 0 #000, 36px 16px 0 #000;
+}
+
+/* Large hill */
+.hill-large {
+  box-shadow:
+    /* Black outline - top curve */
+    40px 0 0 #000, 44px 0 0 #000, 48px 0 0 #000, 52px 0 0 #000, 56px 0 0 #000, 60px 0 0 #000,
+    32px 4px 0 #000, 68px 4px 0 #000,
+    24px 8px 0 #000, 76px 8px 0 #000,
+    16px 12px 0 #000, 84px 12px 0 #000,
+    12px 16px 0 #000, 88px 16px 0 #000,
+    8px 20px 0 #000, 92px 20px 0 #000,
+    4px 24px 0 #000, 96px 24px 0 #000,
+    0px 28px 0 #000, 100px 28px 0 #000,
+    0px 32px 0 #000, 100px 32px 0 #000,
+    0px 36px 0 #000, 100px 36px 0 #000,
+    0px 40px 0 #000, 100px 40px 0 #000,
+    /* Green fill */
+    40px 4px 0 #00a800, 44px 4px 0 #00a800, 48px 4px 0 #00a800, 52px 4px 0 #00a800, 56px 4px 0 #00a800, 60px 4px 0 #00a800,
+    32px 8px 0 #00a800, 36px 8px 0 #00a800, 40px 8px 0 #00a800, 44px 8px 0 #00a800, 48px 8px 0 #00a800, 52px 8px 0 #00a800, 56px 8px 0 #00a800, 60px 8px 0 #00a800, 64px 8px 0 #00a800, 68px 8px 0 #00a800,
+    24px 12px 0 #00a800, 28px 12px 0 #00a800, 32px 12px 0 #00a800, 36px 12px 0 #00a800, 40px 12px 0 #00a800, 44px 12px 0 #00a800, 48px 12px 0 #00a800, 52px 12px 0 #00a800, 56px 12px 0 #00a800, 60px 12px 0 #00a800, 64px 12px 0 #00a800, 68px 12px 0 #00a800, 72px 12px 0 #00a800, 76px 12px 0 #00a800,
+    16px 16px 0 #00a800, 20px 16px 0 #00a800, 24px 16px 0 #00a800, 28px 16px 0 #00a800, 32px 16px 0 #00a800, 36px 16px 0 #00a800, 40px 16px 0 #00a800, 44px 16px 0 #00a800, 48px 16px 0 #00a800, 52px 16px 0 #00a800, 56px 16px 0 #00a800, 60px 16px 0 #00a800, 64px 16px 0 #00a800, 68px 16px 0 #00a800, 72px 16px 0 #00a800, 76px 16px 0 #00a800, 80px 16px 0 #00a800, 84px 16px 0 #00a800,
+    12px 20px 0 #00a800, 16px 20px 0 #00a800, 20px 20px 0 #00a800, 24px 20px 0 #00a800, 28px 20px 0 #00a800, 32px 20px 0 #00a800, 36px 20px 0 #00a800, 40px 20px 0 #00a800, 44px 20px 0 #00a800, 48px 20px 0 #00a800, 52px 20px 0 #00a800, 56px 20px 0 #00a800, 60px 20px 0 #00a800, 64px 20px 0 #00a800, 68px 20px 0 #00a800, 72px 20px 0 #00a800, 76px 20px 0 #00a800, 80px 20px 0 #00a800, 84px 20px 0 #00a800, 88px 20px 0 #00a800,
+    8px 24px 0 #00a800, 12px 24px 0 #00a800, 16px 24px 0 #00a800, 20px 24px 0 #00a800, 24px 24px 0 #00a800, 28px 24px 0 #00a800, 32px 24px 0 #00a800, 36px 24px 0 #00a800, 40px 24px 0 #00a800, 44px 24px 0 #00a800, 48px 24px 0 #00a800, 52px 24px 0 #00a800, 56px 24px 0 #00a800, 60px 24px 0 #00a800, 64px 24px 0 #00a800, 68px 24px 0 #00a800, 72px 24px 0 #00a800, 76px 24px 0 #00a800, 80px 24px 0 #00a800, 84px 24px 0 #00a800, 88px 24px 0 #00a800, 92px 24px 0 #00a800,
+    4px 28px 0 #00a800, 8px 28px 0 #00a800, 12px 28px 0 #00a800, 16px 28px 0 #00a800, 20px 28px 0 #00a800, 24px 28px 0 #00a800, 28px 28px 0 #00a800, 32px 28px 0 #00a800, 36px 28px 0 #00a800, 40px 28px 0 #00a800, 44px 28px 0 #00a800, 48px 28px 0 #00a800, 52px 28px 0 #00a800, 56px 28px 0 #00a800, 60px 28px 0 #00a800, 64px 28px 0 #00a800, 68px 28px 0 #00a800, 72px 28px 0 #00a800, 76px 28px 0 #00a800, 80px 28px 0 #00a800, 84px 28px 0 #00a800, 88px 28px 0 #00a800, 92px 28px 0 #00a800, 96px 28px 0 #00a800,
+    4px 32px 0 #00a800, 8px 32px 0 #00a800, 12px 32px 0 #00a800, 16px 32px 0 #00a800, 20px 32px 0 #00a800, 24px 32px 0 #00a800, 28px 32px 0 #00a800, 32px 32px 0 #00a800, 36px 32px 0 #00a800, 40px 32px 0 #00a800, 44px 32px 0 #00a800, 48px 32px 0 #00a800, 52px 32px 0 #00a800, 56px 32px 0 #00a800, 60px 32px 0 #00a800, 64px 32px 0 #00a800, 68px 32px 0 #00a800, 72px 32px 0 #00a800, 76px 32px 0 #00a800, 80px 32px 0 #00a800, 84px 32px 0 #00a800, 88px 32px 0 #00a800, 92px 32px 0 #00a800, 96px 32px 0 #00a800,
+    4px 36px 0 #00a800, 8px 36px 0 #00a800, 12px 36px 0 #00a800, 16px 36px 0 #00a800, 20px 36px 0 #00a800, 24px 36px 0 #00a800, 28px 36px 0 #00a800, 32px 36px 0 #00a800, 36px 36px 0 #00a800, 40px 36px 0 #00a800, 44px 36px 0 #00a800, 48px 36px 0 #00a800, 52px 36px 0 #00a800, 56px 36px 0 #00a800, 60px 36px 0 #00a800, 64px 36px 0 #00a800, 68px 36px 0 #00a800, 72px 36px 0 #00a800, 76px 36px 0 #00a800, 80px 36px 0 #00a800, 84px 36px 0 #00a800, 88px 36px 0 #00a800, 92px 36px 0 #00a800, 96px 36px 0 #00a800,
+    4px 40px 0 #00a800, 8px 40px 0 #00a800, 12px 40px 0 #00a800, 16px 40px 0 #00a800, 20px 40px 0 #00a800, 24px 40px 0 #00a800, 28px 40px 0 #00a800, 32px 40px 0 #00a800, 36px 40px 0 #00a800, 40px 40px 0 #00a800, 44px 40px 0 #00a800, 48px 40px 0 #00a800, 52px 40px 0 #00a800, 56px 40px 0 #00a800, 60px 40px 0 #00a800, 64px 40px 0 #00a800, 68px 40px 0 #00a800, 72px 40px 0 #00a800, 76px 40px 0 #00a800, 80px 40px 0 #00a800, 84px 40px 0 #00a800, 88px 40px 0 #00a800, 92px 40px 0 #00a800, 96px 40px 0 #00a800,
+    /* Eyes - left eye */
+    36px 16px 0 #000, 40px 16px 0 #000,
+    36px 20px 0 #000, 40px 20px 0 #000,
+    /* Eyes - right eye */
+    60px 16px 0 #000, 64px 16px 0 #000,
+    60px 20px 0 #000, 64px 20px 0 #000;
+}
+
+/* 8-bit style cloud using box-shadow pixel art */
+.cloud {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  width: 4px;
+  height: 4px;
+  background: transparent;
+}
+
+/* Single-bump cloud (small) - 10x7 pixels */
+.cloud-small {
+  box-shadow:
+    /* Black outline - top */
+    12px 0 0 #000, 16px 0 0 #000, 20px 0 0 #000,
+    8px 4px 0 #000, 24px 4px 0 #000,
+    4px 8px 0 #000, 28px 8px 0 #000,
+    4px 12px 0 #000, 28px 12px 0 #000,
+    0px 16px 0 #000, 32px 16px 0 #000,
+    0px 20px 0 #000, 32px 20px 0 #000,
+    /* Black outline - bottom */
+    4px 24px 0 #000, 8px 24px 0 #000, 12px 24px 0 #000, 16px 24px 0 #000, 20px 24px 0 #000, 24px 24px 0 #000, 28px 24px 0 #000,
+    /* White fill */
+    12px 4px 0 #fff, 16px 4px 0 #fff, 20px 4px 0 #fff,
+    8px 8px 0 #fff, 12px 8px 0 #fff, 16px 8px 0 #fff, 20px 8px 0 #fff, 24px 8px 0 #fff,
+    8px 12px 0 #fff, 12px 12px 0 #fff, 16px 12px 0 #fff, 20px 12px 0 #fff, 24px 12px 0 #fff,
+    4px 16px 0 #fff, 8px 16px 0 #fff, 12px 16px 0 #fff, 16px 16px 0 #fff, 20px 16px 0 #fff, 24px 16px 0 #fff, 28px 16px 0 #fff,
+    4px 20px 0 #fff, 8px 20px 0 #fff, 28px 20px 0 #fff,
+    /* Eyes */
+    12px 12px 0 #000, 20px 12px 0 #000,
+    /* Blue shading */
+    12px 20px 0 #5c94fc, 16px 20px 0 #5c94fc, 20px 20px 0 #5c94fc, 24px 20px 0 #5c94fc;
+}
+
+/* Triple-bump cloud (large) - 24x7 pixels */
+.cloud-large {
+  box-shadow:
+    /* Black outline - top bumps */
+    12px 0 0 #000, 16px 0 0 #000, 20px 0 0 #000,
+    36px 0 0 #000, 40px 0 0 #000, 44px 0 0 #000,
+    60px 0 0 #000, 64px 0 0 #000, 68px 0 0 #000,
+    8px 4px 0 #000, 24px 4px 0 #000,
+    32px 4px 0 #000, 48px 4px 0 #000,
+    56px 4px 0 #000, 72px 4px 0 #000,
+    4px 8px 0 #000, 76px 8px 0 #000,
+    4px 12px 0 #000, 76px 12px 0 #000,
+    0px 16px 0 #000, 80px 16px 0 #000,
+    0px 20px 0 #000, 80px 20px 0 #000,
+    /* Black outline - bottom */
+    4px 24px 0 #000, 8px 24px 0 #000, 12px 24px 0 #000, 16px 24px 0 #000, 20px 24px 0 #000, 24px 24px 0 #000, 28px 24px 0 #000,
+    32px 24px 0 #000, 36px 24px 0 #000, 40px 24px 0 #000, 44px 24px 0 #000, 48px 24px 0 #000, 52px 24px 0 #000, 56px 24px 0 #000,
+    60px 24px 0 #000, 64px 24px 0 #000, 68px 24px 0 #000, 72px 24px 0 #000, 76px 24px 0 #000,
+    /* White fill - top row */
+    12px 4px 0 #fff, 16px 4px 0 #fff, 20px 4px 0 #fff,
+    36px 4px 0 #fff, 40px 4px 0 #fff, 44px 4px 0 #fff,
+    60px 4px 0 #fff, 64px 4px 0 #fff, 68px 4px 0 #fff,
+    /* White fill - body */
+    8px 8px 0 #fff, 12px 8px 0 #fff, 16px 8px 0 #fff, 20px 8px 0 #fff, 24px 8px 0 #fff, 28px 8px 0 #fff,
+    32px 8px 0 #fff, 36px 8px 0 #fff, 40px 8px 0 #fff, 44px 8px 0 #fff, 48px 8px 0 #fff, 52px 8px 0 #fff,
+    56px 8px 0 #fff, 60px 8px 0 #fff, 64px 8px 0 #fff, 68px 8px 0 #fff, 72px 8px 0 #fff,
+    8px 12px 0 #fff, 12px 12px 0 #fff, 16px 12px 0 #fff, 20px 12px 0 #fff, 24px 12px 0 #fff, 28px 12px 0 #fff,
+    32px 12px 0 #fff, 36px 12px 0 #fff, 40px 12px 0 #fff, 44px 12px 0 #fff, 48px 12px 0 #fff, 52px 12px 0 #fff,
+    56px 12px 0 #fff, 60px 12px 0 #fff, 64px 12px 0 #fff, 68px 12px 0 #fff, 72px 12px 0 #fff,
+    4px 16px 0 #fff, 8px 16px 0 #fff, 12px 16px 0 #fff, 16px 16px 0 #fff, 20px 16px 0 #fff, 24px 16px 0 #fff, 28px 16px 0 #fff,
+    32px 16px 0 #fff, 36px 16px 0 #fff, 40px 16px 0 #fff, 44px 16px 0 #fff, 48px 16px 0 #fff, 52px 16px 0 #fff,
+    56px 16px 0 #fff, 60px 16px 0 #fff, 64px 16px 0 #fff, 68px 16px 0 #fff, 72px 16px 0 #fff, 76px 16px 0 #fff,
+    4px 20px 0 #fff, 8px 20px 0 #fff, 72px 20px 0 #fff, 76px 20px 0 #fff,
+    /* Eyes */
+    16px 12px 0 #000, 40px 12px 0 #000, 64px 12px 0 #000,
+    /* Blue shading */
+    12px 20px 0 #5c94fc, 16px 20px 0 #5c94fc, 20px 20px 0 #5c94fc, 24px 20px 0 #5c94fc, 28px 20px 0 #5c94fc,
+    32px 20px 0 #5c94fc, 36px 20px 0 #5c94fc, 40px 20px 0 #5c94fc, 44px 20px 0 #5c94fc, 48px 20px 0 #5c94fc,
+    52px 20px 0 #5c94fc, 56px 20px 0 #5c94fc, 60px 20px 0 #5c94fc, 64px 20px 0 #5c94fc, 68px 20px 0 #5c94fc;
 }
 
 .split-right {
@@ -55,8 +318,17 @@ div.guessbox {
   overflow-x: hidden;
   padding-top: 20px;
   right: 0;
-  background-color: red;
+  background: linear-gradient(135deg, #ff4444 0%, #cc0000 50%, #990000 100%);
   color: white;
+  border-left: 6px solid #660000;
+  box-shadow:
+      inset 4px 0 0 #ff6666,
+      -4px 0 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.4s ease-in-out;
+}
+
+.split-right.hidden {
+  transform: translateX(100%);
 }
 
 /* If you want the content centered horizontally and vertically */
@@ -65,21 +337,268 @@ div.guessbox {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  text-align: right;
+  text-align: center;
+  display: flex;
+  gap: 10px;
+}
+
+.legend-column {
+  display: flex;
+  flex-direction: column;
 }
 
 #legend {
-    font-size: 20px;
+    font-size: 14px;
+}
+
+.legend-item {
+    display: block;
+    background: linear-gradient(135deg, #ff6666 0%, #ee3333 50%, #cc0000 100%);
+    border: 3px solid #660000;
+    border-radius: 4px;
+    padding: 3px 8px;
+    margin: 2px;
+    box-shadow:
+        inset 1px 1px 0 #ff8888,
+        inset -1px -1px 0 #aa0000,
+        2px 2px 0 #440000;
+    text-shadow: 1px 1px 0 #660000;
+}
+
+/* Shake animation for wrong guesses */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.2s ease-in-out;
+}
+
+/* Vertical bounce animation for correct guesses */
+@keyframes popUp {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-10px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-5px); }
+}
+
+.pop {
+    animation: popUp 0.3s ease-in-out;
+}
+
+/* Coin pop animation */
+@keyframes coinPop {
+    0% {
+        transform: translateY(0) rotateY(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-60px) rotateY(360deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-80px) rotateY(720deg);
+        opacity: 0;
+    }
+}
+
+.coin {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -12px;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(ellipse at 30% 30%, #fff700 0%, #ffcc00 40%, #cc9900 100%);
+    border: 3px solid #996600;
+    border-radius: 50%;
+    box-shadow:
+        inset -2px -2px 0 #cc9900,
+        inset 2px 2px 0 #ffee55,
+        2px 2px 4px rgba(0,0,0,0.3);
+    animation: coinPop 0.5s ease-out forwards;
+    pointer-events: none;
+    z-index: 200;
+}
+
+.coin::after {
+    content: '★';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #996600;
+}
+
+/* Victory animations */
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    50%, 100% {
+        left: 200%;
+    }
+}
+
+.victory .guessbox {
+    overflow: hidden;
+}
+
+.victory .guessbox::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.9),
+        transparent
+    );
+    animation: shine 1.5s ease-in-out infinite;
+    animation-delay: var(--shine-delay, 0s);
+}
+
+.victory-message {
+    position: fixed;
+    top: 15%;
+    font-size: 48px;
+    color: gold;
+    text-shadow: 3px 3px 0 red, -3px -3px 0 red, 3px -3px 0 red, -3px 3px 0 red;
+    z-index: 100;
+    animation: bounce 0.5s ease-in-out infinite;
+}
+
+.play-again {
+    position: fixed;
+    bottom: 15%;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #66cc66 0%, #44aa44 50%, #228822 100%);
+    color: white;
+    border: 4px solid #115511;
+    border-radius: 4px;
+    box-shadow:
+        inset 2px 2px 0 #88ee88,
+        inset -2px -2px 0 #226622,
+        3px 3px 0 #0a330a;
+    text-shadow: 2px 2px 0 #115511;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.play-again:hover {
+    background: linear-gradient(135deg, #88ee88 0%, #66cc66 50%, #44aa44 100%);
+}
+
+.play-again:active {
+    box-shadow:
+        inset 2px 2px 0 #88ee88,
+        inset -2px -2px 0 #226622,
+        1px 1px 0 #0a330a;
+}
+
+.mode-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #f5bc42 0%, #e6a222 50%, #c98b1a 100%);
+    color: #5d3a1a;
+    border: 3px solid #8b5a2b;
+    border-radius: 4px;
+    box-shadow:
+        inset 1px 1px 0 #ffe082,
+        inset -1px -1px 0 #a56a1b,
+        2px 2px 0 #5d3a1a;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.mode-toggle:hover {
+    background: linear-gradient(135deg, #ffe082 0%, #f5bc42 50%, #e6a222 100%);
+}
+
+.mode-toggle.challenge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 50%, #cc4444 100%);
+    border-color: #8b0000;
+    color: white;
+    text-shadow: 1px 1px 0 #8b0000;
+    box-shadow:
+        inset 1px 1px 0 #ff8a8a,
+        inset -1px -1px 0 #aa3333,
+        2px 2px 0 #660000;
+}
+
+.split-left.fullwidth {
+    width: 100%;
 }
 </style>
 </head>
 <body>
 
+<button id="modeToggle" class="mode-toggle" onclick="toggleMode()">SWITCH TO CHALLENGE MODE?</button>
 <div id="game" class="split-left"></div>
 <hr/>
 <div id="legend" class="split-right"></div>
 
 <script>
+
+// Game state
+let uniqueLetters = new Set();
+let revealedLetters = new Set();
+let gameWon = false;
+let challengeMode = false;
+
+function toggleMode() {
+    if (gameWon) return;
+
+    challengeMode = !challengeMode;
+    const btn = document.getElementById('modeToggle');
+    const legend = document.getElementById('legend');
+    const gameDiv = document.getElementById('game');
+
+    if (challengeMode) {
+        btn.textContent = 'SWITCH TO NORMAL MODE?';
+        btn.classList.add('challenge');
+        legend.classList.add('hidden');
+        gameDiv.classList.add('fullwidth');
+
+        // Change all unrevealed boxes to show "?"
+        document.querySelectorAll('.guessbox').forEach(function(box) {
+            if (!revealedLetters.has(box.getAttribute('name'))) {
+                box.innerHTML = '?';
+            }
+        });
+    } else {
+        btn.textContent = 'SWITCH TO CHALLENGE MODE?';
+        btn.classList.remove('challenge');
+        legend.classList.remove('hidden');
+        gameDiv.classList.remove('fullwidth');
+
+        // Change all unrevealed boxes back to show numbers
+        document.querySelectorAll('.guessbox').forEach(function(box) {
+            if (!revealedLetters.has(box.getAttribute('name'))) {
+                box.innerHTML = box.getAttribute('data-number');
+            }
+        });
+    }
+}
 
 const answers = [
     /* characters */
@@ -225,37 +744,189 @@ var decodingCypher = new Map([
 
 const answer = answers[Math.floor(Math.random()*answers.length)];
 
+// Build the set of unique letters in the answer
+for (const letter of answer) {
+    if (letter !== " ") {
+        uniqueLetters.add(letter);
+    }
+}
+
 let encodedAnswer = "";
 
 let i = 0;
 
 for(const letter of answer) {
-    if(letter == " ") { 
-        encodedAnswer += "<br/><br/><br/><br/>" 
+    if(letter == " ") {
+        encodedAnswer += "<div class=\"word-break\"></div>";
     } else {
-        encodedAnswer += "<div name=\"" + letter + "\" class=\"guessbox\">" + encodingCypher.get(letter) + "</div>";
+        const number = encodingCypher.get(letter);
+        encodedAnswer += "<div name=\"" + letter + "\" data-number=\"" + number + "\" class=\"guessbox\">" + number + "</div>";
         i = i++;
     }
-};
+}
 
 let legend = "<div class=\"centered\">";
+legend += "<div class=\"legend-column\">";
 
+let count = 0;
 encodingCypher.forEach(function(key, value) {
-    legend += key + " = " + value + "<br/>";
+    count++;
+    if (count === 14) {
+        legend += "</div><div class=\"legend-column\">";
+    }
+    legend += "<span class=\"legend-item\">" + key + "=" + value + "</span>";
 });
 
-legend += "</div>";
+legend += "</div></div>";
 
 document.getElementById("game").innerHTML = encodedAnswer;
 document.getElementById("legend").innerHTML = legend;
 
+// Create 8-bit clouds
+function createCloud(size, x, y) {
+    const cloud = document.createElement('div');
+    cloud.className = 'cloud cloud-' + size;
+    cloud.style.left = x + '%';
+    cloud.style.top = y + 'px';
+    document.getElementById("game").appendChild(cloud);
+}
+
+// Create hills (dark green pixelated mounds)
+function createHill(size, x) {
+    const hill = document.createElement('div');
+    hill.className = 'hill hill-' + size;
+    hill.style.left = x + '%';
+    // Position so bottom of visual sits exactly on brick floor (64px)
+    // Adjusted for 1.5x scale - need higher values since scale extends the shadow downward
+    hill.style.bottom = (size === 'large' ? 124 : 106) + 'px';
+    document.getElementById("game").appendChild(hill);
+}
+
+// Create bushes (light green, cloud-shaped)
+function createBush(size, x) {
+    const bush = document.createElement('div');
+    bush.className = 'bush bush-' + size;
+    bush.style.left = x + '%';
+    // Position so bottom of visual sits exactly on brick floor (64px)
+    bush.style.bottom = '88px';
+    document.getElementById("game").appendChild(bush);
+}
+
+// Clouds - scattered across the sky
+createCloud('small', 5, 40);
+createCloud('large', 18, 80);
+createCloud('small', 38, 50);
+createCloud('small', 52, 100);
+createCloud('large', 65, 35);
+createCloud('small', 85, 70);
+
+// Hills - large dark green mounds (z-index: 1, behind bushes)
+// Each hill overlaps with exactly one bush
+createHill('large', -2);
+createHill('small', 22);
+createHill('small', 45);    // small hill paired with large bush for variety
+createHill('small', 62);
+createHill('large', 80);
+
+// Bushes - light green cloud-shaped (z-index: 2, in front of hills)
+// Large pairs have less overlap, small pairs have ~50% overlap
+createBush('large', 8);     // less overlap with large hill at -2%
+createBush('small', 20);    // 50% overlap with small hill at 22%
+createBush('large', 50);    // large bush with small hill at 45%
+createBush('small', 60);    // 50% overlap with small hill at 62%
+createBush('large', 90);    // less overlap with large hill at 80%
+
+function triggerVictory() {
+    gameWon = true;
+
+    const gameDiv = document.getElementById("game");
+    gameDiv.classList.add("victory");
+
+    // Add staggered animation delay to each guessbox for wave effect
+    const boxes = document.querySelectorAll('.guessbox');
+    boxes.forEach(function(box, index) {
+        box.style.setProperty('--shine-delay', (index * 0.1) + 's');
+    });
+
+    // Calculate center of game area
+    const gameWidth = gameDiv.offsetWidth;
+    const centerX = gameWidth / 2;
+
+    // Add WAHOO message
+    const wahoo = document.createElement("div");
+    wahoo.className = "victory-message";
+    wahoo.textContent = "WAHOO!";
+    wahoo.style.left = centerX + "px";
+    wahoo.style.transform = "translateX(-50%)";
+    document.body.appendChild(wahoo);
+
+    // Add Play Again button
+    const playAgain = document.createElement("button");
+    playAgain.className = "play-again";
+    playAgain.textContent = "PLAY AGAIN";
+    playAgain.style.left = centerX + "px";
+    playAgain.style.transform = "translateX(-50%)";
+    playAgain.onclick = function() {
+        location.reload();
+    };
+    document.body.appendChild(playAgain);
+}
+
+function checkVictory() {
+    if (revealedLetters.size === uniqueLetters.size) {
+        // Check that all unique letters have been revealed
+        let allRevealed = true;
+        uniqueLetters.forEach(function(letter) {
+            if (!revealedLetters.has(letter)) {
+                allRevealed = false;
+            }
+        });
+        if (allRevealed) {
+            triggerVictory();
+        }
+    }
+}
+
 document.onkeydown = function(e) {
-    const keyCode = e.keyCode;
-    if (keyCode > 64 && keyCode < 91) {
-        const guess = decodingCypher.get(keyCode);
-        document.getElementsByName(guess).forEach(function(each) {
-            each.innerHTML = guess;
-        })
+    if (gameWon) return;
+
+    // Use e.key (modern) and convert to uppercase
+    const key = e.key.toUpperCase();
+
+    // Check if it's a single letter A-Z
+    if (key.length === 1 && key >= 'A' && key <= 'Z') {
+        const guess = key;
+        const elements = document.getElementsByName(guess);
+
+        if (elements.length > 0 && !revealedLetters.has(guess)) {
+            // Correct guess - letter is in the puzzle and not yet revealed
+            elements.forEach(function(each) {
+                each.innerHTML = guess;
+                each.classList.remove('pop');
+                void each.offsetWidth; // Trigger reflow to restart animation
+                each.classList.add('pop');
+
+                // Create coin that pops out
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                each.appendChild(coin);
+
+                // Remove coin after animation completes
+                setTimeout(function() {
+                    coin.remove();
+                }, 500);
+            });
+            revealedLetters.add(guess);
+            checkVictory();
+        } else if (elements.length === 0) {
+            // Wrong guess - letter is not in the puzzle
+            const gameDiv = document.getElementById("game");
+            gameDiv.classList.remove("shake");
+            // Trigger reflow to restart animation
+            void gameDiv.offsetWidth;
+            gameDiv.classList.add("shake");
+        }
+        // If already revealed, do nothing (no sound, no animation)
     }
 }
 
