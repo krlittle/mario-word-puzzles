@@ -552,10 +552,10 @@ div.guessbox {
 </head>
 <body>
 
-<button id="modeToggle" class="mode-toggle" onclick="toggleMode()">SWITCH TO CHALLENGE MODE?</button>
-<div id="game" class="split-left"></div>
+<button id="modeToggle" class="mode-toggle challenge" onclick="toggleMode()">SWITCH TO SIMPLE MODE?</button>
+<div id="game" class="split-left fullwidth"></div>
 <hr/>
-<div id="legend" class="split-right"></div>
+<div id="legend" class="split-right hidden"></div>
 
 <script>
 
@@ -563,18 +563,30 @@ div.guessbox {
 let uniqueLetters = new Set();
 let revealedLetters = new Set();
 let gameWon = false;
-let challengeMode = false;
+let simpleMode = false;
 
 function toggleMode() {
     if (gameWon) return;
 
-    challengeMode = !challengeMode;
+    simpleMode = !simpleMode;
     const btn = document.getElementById('modeToggle');
     const legend = document.getElementById('legend');
     const gameDiv = document.getElementById('game');
 
-    if (challengeMode) {
+    if (simpleMode) {
         btn.textContent = 'SWITCH TO NORMAL MODE?';
+        btn.classList.remove('challenge');
+        legend.classList.remove('hidden');
+        gameDiv.classList.remove('fullwidth');
+
+        // Change all unrevealed boxes to show numbers
+        document.querySelectorAll('.guessbox').forEach(function(box) {
+            if (!revealedLetters.has(box.getAttribute('name'))) {
+                box.innerHTML = box.getAttribute('data-number');
+            }
+        });
+    } else {
+        btn.textContent = 'SWITCH TO SIMPLE MODE?';
         btn.classList.add('challenge');
         legend.classList.add('hidden');
         gameDiv.classList.add('fullwidth');
@@ -583,18 +595,6 @@ function toggleMode() {
         document.querySelectorAll('.guessbox').forEach(function(box) {
             if (!revealedLetters.has(box.getAttribute('name'))) {
                 box.innerHTML = '?';
-            }
-        });
-    } else {
-        btn.textContent = 'SWITCH TO CHALLENGE MODE?';
-        btn.classList.remove('challenge');
-        legend.classList.remove('hidden');
-        gameDiv.classList.remove('fullwidth');
-
-        // Change all unrevealed boxes back to show numbers
-        document.querySelectorAll('.guessbox').forEach(function(box) {
-            if (!revealedLetters.has(box.getAttribute('name'))) {
-                box.innerHTML = box.getAttribute('data-number');
             }
         });
     }
@@ -760,7 +760,7 @@ for(const letter of answer) {
         encodedAnswer += "<div class=\"word-break\"></div>";
     } else {
         const number = encodingCypher.get(letter);
-        encodedAnswer += "<div name=\"" + letter + "\" data-number=\"" + number + "\" class=\"guessbox\">" + number + "</div>";
+        encodedAnswer += "<div name=\"" + letter + "\" data-number=\"" + number + "\" class=\"guessbox\">?</div>";
         i = i++;
     }
 }
