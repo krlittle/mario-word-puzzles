@@ -1,2 +1,2 @@
-# mario-decoder
-a simple super mario themed decoder game: [https://mario-decoder.herokuapp.com](https://mario-decoder.herokuapp.com)
+# mario-word-puzzles
+a simple super mario themed decoder game: [https://krlittle.github.io/mario-word-puzzles/](https://krlittle.github.io/mario-word-puzzles/)
